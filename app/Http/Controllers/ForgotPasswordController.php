@@ -38,7 +38,7 @@ class ForgotPasswordController extends Controller
 
         if (!$user)
         {
-            return response()->json(['status' => 401, 'message' => "we can't find a user with that email address."]);
+            return response()->json([ 'message' => 'we can not find a user with that email address'],404);
         }
         
         $passwordReset = PasswordReset::updateOrCreate(
@@ -56,7 +56,7 @@ class ForgotPasswordController extends Controller
             $sendEmail->sendEmail($user->email,$passwordReset->token);
         }
 
-        return response()->json(['status' => 200, 'message' => 'we have emailed your password reset link to respective mail']);
+        return response()->json(['message' => 'we have emailed your password reset link to respective mail'],200);
 
     }
 
@@ -70,7 +70,7 @@ class ForgotPasswordController extends Controller
      */
     public function resetPassword(Request $request)
     {
-        $validate = FacadesValidator::make($request->all(), [
+        $validate = Validator::make($request->all(), [
             'new_password' => 'min:6|required|',
             'confirm_password' => 'required|same:new_password'
         ]);
@@ -78,10 +78,9 @@ class ForgotPasswordController extends Controller
         if ($validate->fails())
         {
 
-            return response()->json(
-                ['status' => 201, 
+            return response()->json([
                  'message' => "Password doesn't match"
-                ]);
+                ],400);
         }
         
         $passwordReset = PasswordReset::where('token', $request->token)->first();
@@ -89,7 +88,7 @@ class ForgotPasswordController extends Controller
 
         if (!$passwordReset) 
         {
-            return response()->json(['status' => 401, 'message' => 'This token is invalid']);
+            return response()->json(['message' => 'This token is invalid'],401);
         }
 
         $user = User::where('email', $passwordReset->email)->first();
@@ -97,9 +96,8 @@ class ForgotPasswordController extends Controller
         if (!$user)
         {
             return response()->json([
-                'status' => 201, 
                 'message' => "we can't find the user with that e-mail address"
-            ], 201);
+            ], 400);
         }
         else
         {
@@ -109,7 +107,7 @@ class ForgotPasswordController extends Controller
             return response()->json([
                 'status' => 201, 
                 'message' => 'Password reset successfull!'
-            ]);
+            ],201);
         }
     }
 }
