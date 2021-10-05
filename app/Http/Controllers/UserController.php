@@ -41,6 +41,7 @@ class UserController extends Controller
             'lastname' => 'required|string|between:2,20',
             'email' => 'required|string|email|max:100',
             'password' => 'required|string|confirmed|min:6',
+            'confirm_password' => 'required|string|confirmed|min:6',
         ]);
 
         if($validator->fails())
@@ -119,14 +120,24 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function logout() 
-    {
-        auth()->logout();
-
+     public function logout() 
+     {
+        try
+        {
+            auth()->logout();
+        } 
+        catch (Exception $e) 
+        {
+            return response()->json([
+                'message' => 'Invalid authorization token'
+            ], 404);
+        }
+    
         return response()->json([
             'message' => 'User successfully signed out'
         ],201);
-    }
+        
+     }
 
     /**
      * Get the token array structure.
