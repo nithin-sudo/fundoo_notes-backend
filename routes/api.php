@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\NoteController;
+use App\Http\Controllers\LabelController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,9 +33,16 @@ Route::group([
     Route::post('refresh', [UserController::class, 'refresh']);
     Route::post('forgotpassword', [ForgotPasswordController::class, 'forgotPassword']);
     Route::post('resetpassword', [ForgotPasswordController::class, 'resetPassword']);
+
     Route::post('createnote', [NoteController::class, 'createNote']);
-    Route::post('displaynote', [NoteController::class, 'displayNoteById']);
-    Route::get('deletenote', [NoteController::class, 'deleteNote']);
-    Route::put('updatenote', [NoteController::class, 'updateNote']);
-   
+    Route::get('displaynote', [NoteController::class, 'displayNoteById']);
+    Route::post('deletenote', [NoteController::class, 'deleteNoteById']);
+    Route::put('updatenote', [NoteController::class, 'updateNoteById']);
+    Route::get('getallnotes', [NoteController::class, 'getAllNotes']);
+    
+    Route::post('createlable', [LabelController::class, 'createLabel']);
+    Route::get('displaylable', [LabelController::class, 'displayLabelById']);
+    Route::put('updatelable', [LabelController::class, 'updateLabelById']);
+    Route::post('deletelable', [LabelController::class, 'deleteLabelById']);
+    Route::get('displayall', [LabelController::class, 'getAllLabels']);
 });   
