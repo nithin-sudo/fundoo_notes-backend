@@ -19,6 +19,7 @@ use App\Http\Controllers\LabelController;
 */
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+    Log::channel('custom');
     return $request->user();
 });
 
