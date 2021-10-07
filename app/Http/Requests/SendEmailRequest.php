@@ -48,11 +48,11 @@ class SendEmailRequest
 
             if($dt)
             {
-                echo 'Email has been sent successfully';
+                return true;
             } 
             else
             {
-                 echo 'Something went wrong';
+                return false;
             } 
 
         }
@@ -63,51 +63,4 @@ class SendEmailRequest
         }
     }
 
-
-     /**
-     * This function takes two args from the function in ForgotPasswordcontroller and successfully 
-     * sends the token as a reset link to the user email id. 
-     */
-    public function sendRegisterEmail($email,$userName)
-    {
-            $name = 'Nithin Krishna';
-            $email = $email;
-            $subject = 'Regarding Registration';
-            $data ="Thanks for registering with us  ".$userName;
-            
-            require '..\vendor\autoload.php';
-            $mail = new PHPMailer(true);
-
-            try
-            {                                       
-                $mail->isSMTP();                                          
-                $mail->Host       = 'smtp.gmail.com';                        
-                $mail->SMTPAuth   = true;                                  
-                $mail->Username   = 'nithinkrishnasathram@gmail.com';                  
-                $mail->Password   = '*******';                              
-                $mail->SMTPSecure = 'tls'; 
-                $mail->Port       = 587;
-                $mail->setFrom('nithinkrishnasathram@gmail.com', 'nithin'); 
-                $mail->addAddress($email,$name);
-                $mail->isHTML(true);  
-                $mail->Subject =  $subject;
-                $mail->Body    = $data;
-                $dt = $mail->send();
-
-                if($dt)
-                {
-                    echo 'Email has been sent successfully';
-                } 
-                else
-                {
-                    echo 'Something went wrong';
-                } 
-
-             }
-            catch (Exception $e) 
-            {
-                return back()->with('error','Message could not be sent.');
-
-            }
-    }
 }
