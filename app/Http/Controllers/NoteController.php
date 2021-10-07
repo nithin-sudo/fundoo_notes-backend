@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 use App\Models\Note;
+use App\Models\User;
+use App\Models\Label;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Auth;
 use Exception;
 use Validator;
@@ -32,12 +36,15 @@ class NoteController extends Controller
         } 
 		catch (Exception $e) 
 		{
+            //Log::error('Invalid User');
+            Log::channel('mydailylogs')->critical('This token is invalid');
             return response()->json([
                 'status' => 404, 
                 'message' => 'Invalid authorization token'
             ], 404);
         }
 
+        Log::info('notes created',['user_id'=>$note->user_id]);
         return response()->json([
 		'status' => 201, 
 		'message' => 'notes created successfully'
@@ -82,6 +89,7 @@ class NoteController extends Controller
     
             if(!$note)
             {
+                Log::error('Notes Not Found',['id'=>$request->id]);
                 return response()->json([ 'message' => 'Notes not Found'], 404);
             }
     
@@ -89,6 +97,7 @@ class NoteController extends Controller
     
             if($note->save())
             {
+                Log::info('notes updated',['user_id'=>$currentUser,'note_id'=>$request->id]);
                 return response()->json(['message' => 'Note updated Sucessfully' ], 201);
             }      
         }
@@ -116,11 +125,13 @@ class NoteController extends Controller
     
             if(!$note)
             {
+                Log::error('Notes Not Found',['id'=>$request->id]);
                 return response()->json(['message' => 'Notes not Found'], 404);
             }
     
             if($note->delete())
             {
+                Log::info('notes deleted',['user_id'=>$currentUser,'note_id'=>$request->id]);
                 return response()->json(['message' => 'Note deleted Sucessfully'], 201);
             }   
         }
@@ -140,19 +151,48 @@ class NoteController extends Controller
 
         if ($notes->user_id == auth()->id()) 
         {
+
+
+            $user = User::join('notes', 'notes.user_id', '=', 'users.id')
+                ->join('labels', 'labels.note_id', '=','notes.id')
+                //->where('users.id', '=', $notes->user_id)
+                ->get(['users.id', 'notes.id', 'labels.note_id']);
+
+            // $user = Note::select("id","title","description")
+            //                     ->where([
+            //                         ['user_id', '=', $notes->user_id](
+            //                             Label::select('id','labelname')
+            //                             ->where([
+            //                                 ['note_id', '=', $notes->user_id]
+            //                             ]))
+            //                     ])       
+            //                 ->join("labels","labels.id", "=", "labels.id")
+            //                 ->get();
+            // $user = DB::table('users')
+            //             ->join('notes','users.id', '=', 'notes.user_id')
+            //             ->join('labels','notes.id', '=', 'labels.note_id')
+            //             ->select('notes.id', 'notes.title', 'notes.description', 'labels.id', 'labels.labelname')
+            //             ->get();
+
+
+            /*
             $user = Note::select('id', 'title', 'description')
                 ->where([
                     ['user_id', '=', $notes->user_id],
-                    ['notes', '=', '0']
                 ])
                 ->get();
+            $label = Label::select('id', 'labelname') 
+                ->where([
+                    ['user_id', '=', $notes->user_id],
+                ])
+                ->get();  
+                */  
             if ($user=='[]'){
                 return response()->json([
                     'message' => 'Notes not found'
                 ], 404);
             }
-            return
-            response()->json([
+            return response()->json([
                 'notes' => $user,
                 'message' => 'Fetched Notes Successfully'
             ], 201);

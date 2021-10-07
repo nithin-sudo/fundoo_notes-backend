@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Label;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use JWTAuth;
 use Auth;
 use Exception;
@@ -33,6 +34,7 @@ class LabelController extends Controller
 
             if($currentUser->labels()->save($label))
             {
+                Log::info('Label created',['user_id'=>$currentUser,'note_id'=>$request->note_id]);
                 return response()->json([
                     'message' => 'Label created Sucessfully'
                 ], 201);
@@ -40,6 +42,7 @@ class LabelController extends Controller
         }
         catch (Exception $e) 
 		{
+            Log::error('Invalid User');
             return response()->json([ 
                 'message' => 'Invalid authorization token'
             ], 404);
@@ -83,6 +86,7 @@ class LabelController extends Controller
     
             if(!$label)
             {
+                Log::error('Label Not Found',['label_id'=>$request->id]);
                 return response()->json([ 'message' => 'Label not Found'], 404);
             }
     
@@ -90,6 +94,7 @@ class LabelController extends Controller
     
             if($label->save())
             {
+                Log::info('Label updated',['user_id'=>$currentUser,'label_id'=>$request->id]);
                 return response()->json(['message' => 'Label updated Sucessfully' ], 201);
             }      
         }
@@ -117,11 +122,13 @@ class LabelController extends Controller
     
             if(!$label)
             {
+                Log::error('Label Not Found',['label_id'=>$request->id]);
                 return response()->json(['message' => 'Label not Found'], 404);
             }
     
             if($label->delete())
             {
+                Log::info('Label deleted',['user_id'=>$currentUser,'label_id'=>$request->id]);
                 return response()->json(['message' => 'Label deleted Sucessfully'], 201);
             }   
         }
@@ -144,6 +151,7 @@ class LabelController extends Controller
                 ])
                 ->get();
             if ($user=='[]'){
+                Log::error('Labels Not Found',['user_id'=>$labels->user_id]);
                 return response()->json([
                     'message' => 'Labels not found'
                 ], 404);
