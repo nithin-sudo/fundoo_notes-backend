@@ -40,7 +40,17 @@ Route::group([
     Route::post('deletenote', [NoteController::class, 'deleteNoteById']);
     Route::put('updatenote', [NoteController::class, 'updateNoteById']);
     Route::get('getallnotes', [NoteController::class, 'getAllNotes']);
-    
+
+    Route::post('pinnotes', [NoteController::class, 'pinNoteById']);
+    Route::get('getallpinnotes', [NoteController::class, 'getAllPinnedNotes']);
+
+    Route::post('archivenotes', [NoteController::class, 'archiveNoteById']);
+    Route::post('archivenotes', [NoteController::class, 'archiveNoteById']);
+    Route::get('getallarchivednote', [NoteController::class, 'getAllArchivedNotes']);
+
+    Route::post('colour', [NoteController::class, 'colourNoteById']);
+    Route::get('getcolourednotes', [NoteController::class, 'getColouredNotes']);
+
     Route::post('createlable', [LabelController::class, 'createLabel']);
     Route::get('displaylable', [LabelController::class, 'displayLabelById']);
     Route::put('updatelable', [LabelController::class, 'updateLabelById']);
