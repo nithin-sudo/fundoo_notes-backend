@@ -189,7 +189,6 @@ class NoteController extends Controller
         
     }
 
-
     /**
      * This function takes the User access token and checks if it 
      * authorised or not if so, it returns the notes and associated
@@ -204,22 +203,9 @@ class NoteController extends Controller
 
         if ($notes->user_id == auth()->id()) 
         {
-            // $user = Note::join('labels', 'notes.id', '=', 'labels.note_id')
-            //                 ->get(['notes.*','labels.labelname']);
-            
-            // $user = User::join('notes', 'notes.user_id', '=', 'users.id')
-            //   ->join('labels', 'labels.note_id', '=', 'notes.id')
-            //   ->get(['users.*','notes.*', 'notes.description','labels.labelname']);
-
-            // $user = Note::leftJoin('labels', 'labels.note_id', '=', 'notes.id')
-            // ->select('notes.*')
-            // ->get();
-
-            
-            // $user = User::join('notes', 'notes.user_id', '=', 'users.id')
-            //     ->join('labels', 'labels.note_id', '=','notes.id')
-            //     //->where('users.id', '=', $notes->user_id)
-            //     ->get(['users.id', 'notes.id', 'labels.note_id']);
+            $user = Note::leftJoin('labels', 'labels.note_id', '=', 'notes.id')
+                        ->select('notes.id','notes.title','notes.description','notes.pin','notes.archive','notes.colour','labels.labelname')
+                        ->get();
                 
             if ($user=='[]'){
                 return response()->json([
@@ -371,6 +357,107 @@ class NoteController extends Controller
     }
 
 
+    public function colourNoteById(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'id' => 'required',
+            'colour'=>'required'
+        ]);
+        if($validator->fails())
+        {
+            return response()->json($validator->errors()->toJson(), 400);
+        }
 
+        $id = $request->input('id');
+        $currentUser = JWTAuth::parseToken()->authenticate();
+        $note = $currentUser->notes()->find($id);
+
+        if(!$note)
+        {
+            Log::error('Notes Not Found',['user'=>$currentUser,'id'=>$request->id]);
+            return response()->json(['message' => 'Notes not Found'], 404);
+        }
+
+        $colours  =  array(
+            'green'=>'rgb(0,255,0)',
+            'red'=>'rgb(255,0,0)',
+            'blue'=>'rgb(0,0,255)',
+            'yellow'=>'rgb(255,255,0)',
+            'grey'=>'rgb(128,128,128)',
+            'purple'=>'rgb(128,0,128)',
+            'brown'=>'rgb(165,42,42)',
+            'orange'=>'rgb(255,165,0)',
+            'pink'=>'rgb(255,192,203)'
+        );  
+        
+        $colour_name = strtolower($request->colour);
+
+        if (isset($colours[$colour_name]))
+        {
+            $user = Note::where('id', $request->id)
+                            ->update(['colour' => $colours[$colour_name]]);
+
+            Log::info('notes coloured',['user_id'=>$currentUser,'note_id'=>$request->id]);
+            return response()->json(['message' => 'Note coloured Sucessfully' ], 201);
+        }
+        else
+        {
+            return response()->json(['message' => 'colour Not Specified in the List' ], 400);
+        }
+
+    }
+
+    public function getColouredNotes(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'colour' => 'required'
+        ]);
+
+        if($validator->fails())
+        {
+            return response()->json($validator->errors()->toJson(), 400);
+        }
+
+        $colour_name = strtolower($request->input('colour'));
+
+        $colours  =  array(
+            'black'=>'rgb(0,0,0)', 'white'=>'rgb(255,255,255)', 'green'=>'rgb(0,255,0)',
+            'red'=>'rgb(255,0,0)', 'blue'=>'rgb(0,0,255)', 'yellow'=>'rgb(255,255,0)',
+            'grey'=>'rgb(128,128,128)', 'purple'=>'rgb(128,0,128)', 'brown'=>'rgb(165,42,42)',
+            'orange'=>'rgb(255,165,0)', 'pink'=>'rgb(255,192,203)'
+        );
+
+        $notes = new Note();
+        $notes->user_id = auth()->id();
+
+        if (isset($colours[$colour_name]))
+        {
+            if ($notes->user_id == auth()->id()) 
+            {
+                $usernotes = Note::select('id', 'title', 'description')
+                    ->where([
+                        ['user_id', '=', $notes->user_id],
+                        ['colour', '=', $colours[$colour_name]]
+                    ])
+                    ->get();
+                
+                if ($usernotes=='[]'){
+                    return response()->json([
+                        'message' => 'Notes not found'
+                    ], 404);
+                }
+                return
+                response()->json([
+                    'message' => 'Fetched Notes of colour '.$colour_name,
+                    'notes' => $usernotes
+                ], 201);
+            }
+            return response()->json([
+                'status' => 403, 
+                'message' => 'Invalid token'
+            ],403);
+        }
+        return response()->json(['message' => 'colour Not Specified in the List' ], 400);
+    }
 
 }
