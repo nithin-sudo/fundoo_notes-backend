@@ -16,6 +16,8 @@ class SendEmailRequest
 {
 
      /**
+     * @param $email,$token
+     * 
      * This function takes two args from the function in ForgotPasswordcontroller and successfully 
      * sends the token as a reset link to the user email id. 
      */
@@ -35,7 +37,7 @@ class SendEmailRequest
             $mail->Host       = 'smtp.gmail.com';                        
             $mail->SMTPAuth   = true;                                  
             $mail->Username   = 'nithinkrishnasathram@gmail.com';                  
-            $mail->Password   = 'WesAnderson@123W';                              
+            $mail->Password   = '****';                              
             $mail->SMTPSecure = 'tls'; 
             $mail->Port       = 587;
             $mail->setFrom('nithinkrishnasathram@gmail.com', 'nithin'); 
@@ -58,6 +60,8 @@ class SendEmailRequest
     }
 
     /**
+     * @param $email,$data,$currentUserEmail
+     * 
      * This function takes three args and sends the data 
      * to Given Email. 
      */
@@ -77,7 +81,7 @@ class SendEmailRequest
             $mail->Host       = 'smtp.gmail.com';                        
             $mail->SMTPAuth   = true;                                  
             $mail->Username   = 'nithinkrishnasathram@gmail.com';                  
-            $mail->Password   = 'WesAnderson@123W';                              
+            $mail->Password   = '*****';                              
             $mail->SMTPSecure = 'tls'; 
             $mail->Port       = 587;
             $mail->setFrom('nithinkrishnasathram@gmail.com','nithin'); 
