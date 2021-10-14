@@ -145,7 +145,6 @@ class NoteController extends Controller
         {
             return response()->json(['message' => 'Invalid authorization token' ], 404);
         }
-        return $note;
     }
 
     /**
@@ -204,8 +203,9 @@ class NoteController extends Controller
         if ($notes->user_id == auth()->id()) 
         {
             $user = Note::leftJoin('labels', 'labels.note_id', '=', 'notes.id')
-                        ->select('notes.id','notes.title','notes.description','notes.pin','notes.archive','notes.colour','labels.labelname')
-                        ->get();
+                            ->select('notes.id','notes.title','notes.description','notes.pin','notes.archive','notes.colour','labels.labelname')
+                            ->where('notes.pin','=','1')->where('notes.archive','=','0')
+                            ->get();
                 
             if ($user=='[]'){
                 return response()->json([
@@ -223,6 +223,13 @@ class NoteController extends Controller
         ],403);
     }
 
+    /**
+     * This function takes the User access token and checks if it 
+     * authorised or not and it takes the note_id and pins and unpins it 
+     * successfully if notes is exist.  
+     * 
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function pinNoteById(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -259,6 +266,13 @@ class NoteController extends Controller
         return response()->json(['message' => 'Note UnPinned ' ], 201);    
     }
 
+    /**
+     * This function takes the User access token and checks if it 
+     * authorised or not if so, it returns all the pinned notes 
+     * successfully.  
+     * 
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getAllPinnedNotes()
     {
         $notes = new Note();
@@ -289,7 +303,13 @@ class NoteController extends Controller
         ],403);
     }
 
-
+    /**
+     * This function takes the User access token and checks if it 
+     * authorised or not and it takes the note_id and Archives it 
+     * successfully if notes exist.  
+     * 
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function archiveNoteById(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -326,6 +346,13 @@ class NoteController extends Controller
         return response()->json(['message' => 'Note UnArchived ' ], 201);    
     }
 
+    /**
+     * This function takes the User access token and checks if it 
+     * authorised or not if so, it returns all the Archived notes 
+     * successfully.  
+     * 
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getAllArchivedNotes()
     {
         $notes = new Note();
@@ -356,7 +383,13 @@ class NoteController extends Controller
         ],403);
     }
 
-
+    /**
+     * This function takes the User access token and checks if it 
+     * authorised or not and it takes the note_id and colours it 
+     * successfully if notes exist.  
+     * 
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function colourNoteById(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -407,6 +440,13 @@ class NoteController extends Controller
 
     }
 
+    /**
+     * This function takes the User access token and checks if it 
+     * authorised or not if so, it returns all the colured notes 
+     * successfully.  
+     * 
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getColouredNotes(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -441,13 +481,12 @@ class NoteController extends Controller
                     ])
                     ->get();
                 
-                if ($usernotes=='[]'){
+                if ($usernotes == '[]'){
                     return response()->json([
                         'message' => 'Notes not found'
                     ], 404);
                 }
-                return
-                response()->json([
+                return response()->json([
                     'message' => 'Fetched Notes of colour '.$colour_name,
                     'notes' => $usernotes
                 ], 201);
