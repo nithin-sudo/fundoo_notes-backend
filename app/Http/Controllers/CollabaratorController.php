@@ -11,8 +11,23 @@ use App\Models\Collabarator;
 use App\Models\Note;
 use App\Models\User;
 
+/**
+ * @since 14-oct-2021
+ * 
+ * This controller is responsible for performing CRUD operations 
+ * on collabarators.
+ */
 class CollabaratorController extends Controller
 {
+
+    /**
+     * This function takes User access token and checks if it is
+     * authorised or not if so and takes note_id, email if those 
+     * parameters are valid it will successfully creates a 
+     * collabarator.
+     * 
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function addCollabatorByNoteId(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -28,12 +43,6 @@ class CollabaratorController extends Controller
         $currentUser = JWTAuth::parseToken()->authenticate();
         $note = $currentUser->notes()->find($request->input('note_id'));
         $user = User::where('email', $request->email)->first();
-        $collabUser = Collabarator::where('email', $request->email)->first();
-
-        // if ($collabUser)
-        // {
-        //     return response()->json(['message' => 'This Collabarator is already created'],401);
-        // }
 
         if($currentUser)
         {
@@ -41,6 +50,17 @@ class CollabaratorController extends Controller
             {
                 if($user)
                 {
+
+                    $collabUser = Collabarator::select('id')->where([
+                        ['note_id','=',$request->input('note_id')],
+                        ['email','=',$request->input('email')]
+                    ])->get();
+                        
+                    if($collabUser != '[]')
+                    {
+                        return response()->json(['message' => 'Collabarater Already Created' ], 404); 
+                    }
+
                     $collab = new Collabarator;
                     $collab->note_id = $request->get('note_id');
                     $collab->email = $request->get('email');
@@ -61,6 +81,13 @@ class CollabaratorController extends Controller
     }
 
 
+    /**
+     * This function takes User access token of collabarator and
+     * checks if it is authorised or not if so and takes note details
+     * as parametres if those are valid updates the notes successfully. 
+     * 
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function updateNoteByCollabarator(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -107,6 +134,13 @@ class CollabaratorController extends Controller
         return response()->json(['message' => 'Invalid authorization token' ], 404);
     }
 
+    /**
+     * This function takes User access token and checks if it is 
+     * authorised or not if so and takes note_id and collabarator email
+     * as parametres if those are valid deletes the notes successfully. 
+     * 
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function deleteCollabarator(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -144,6 +178,13 @@ class CollabaratorController extends Controller
         }
     }
 
+    /**
+     * This function takes User access token and checks if it is
+     *  authorised or not if so it returns all the collabarators
+     *  he has created.
+     * 
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getAllCollabarators()
     {
         $currentUser = JWTAuth::parseToken()->authenticate();
