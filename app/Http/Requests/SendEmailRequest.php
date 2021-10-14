@@ -3,7 +3,6 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
@@ -25,7 +24,7 @@ class SendEmailRequest
         $name = 'Nithin Krishna';
         $email = $email;
         $subject = 'Regarding your Password Reset';
-        $data ="Your password Reset Link".$token;
+        $data ="Your password Reset Link <br>".$token;
           
         require '..\vendor\autoload.php';
         $mail = new PHPMailer(true);
@@ -36,7 +35,7 @@ class SendEmailRequest
             $mail->Host       = 'smtp.gmail.com';                        
             $mail->SMTPAuth   = true;                                  
             $mail->Username   = 'nithinkrishnasathram@gmail.com';                  
-            $mail->Password   = '*****';                              
+            $mail->Password   = 'WesAnderson@123W';                              
             $mail->SMTPSecure = 'tls'; 
             $mail->Port       = 587;
             $mail->setFrom('nithinkrishnasathram@gmail.com', 'nithin'); 
@@ -47,19 +46,56 @@ class SendEmailRequest
             $dt = $mail->send();
 
             if($dt)
-            {
                 return true;
-            } 
             else
-            {
                 return false;
-            } 
 
         }
         catch (Exception $e) 
         {
             return back()->with('error','Message could not be sent.');
+        }
+    }
 
+    /**
+     * This function takes three args and sends the data 
+     * to Given Email. 
+     */
+    public function sendEmailToCollab($email,$data,$currentUserEmail)
+    {
+        $name = 'Nithin Krishna';
+        $email = $email;
+        $subject = 'Note shared with you:';
+        $data = $currentUserEmail.' shared a Note with you <br>'.$data;
+          
+        require '..\vendor\autoload.php';
+        $mail = new PHPMailer(true);
+
+        try
+        {                                       
+            $mail->isSMTP();                                          
+            $mail->Host       = 'smtp.gmail.com';                        
+            $mail->SMTPAuth   = true;                                  
+            $mail->Username   = 'nithinkrishnasathram@gmail.com';                  
+            $mail->Password   = 'WesAnderson@123W';                              
+            $mail->SMTPSecure = 'tls'; 
+            $mail->Port       = 587;
+            $mail->setFrom('nithinkrishnasathram@gmail.com','nithin'); 
+            $mail->addAddress($email,$name);
+            $mail->isHTML(true);  
+            $mail->Subject =  $subject;
+            $mail->Body    = $data;
+            $dt = $mail->send();
+
+            if($dt)
+                return true;
+            else
+                return false;
+
+        }
+        catch (Exception $e) 
+        {
+            return back()->with('error','Message could not be sent.');
         }
     }
 
