@@ -6,6 +6,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\NoteController;
 use App\Http\Controllers\LabelController;
+use App\Http\Controllers\CollabaratorController;
 
 /*
 |--------------------------------------------------------------------------
@@ -56,4 +57,9 @@ Route::group([
     Route::put('updatelable', [LabelController::class, 'updateLabelById']);
     Route::post('deletelable', [LabelController::class, 'deleteLabelById']);
     Route::get('displayall', [LabelController::class, 'getAllLabels']);
+
+    Route::post('addcollab', [CollabaratorController::class, 'addCollabatorByNoteId']);
+    Route::put('editcollabnote', [CollabaratorController::class, 'updateNoteByCollabarator']);
+    Route::post('deletecollab', [CollabaratorController::class, 'deleteCollabarator']);
+    Route::get('allcollab', [CollabaratorController::class, 'getAllCollabarators']);
 });   
