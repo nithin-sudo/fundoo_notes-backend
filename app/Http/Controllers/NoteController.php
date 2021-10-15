@@ -197,30 +197,25 @@ class NoteController extends Controller
      */
     public function getAllNotes()
     {
-        $notes = new Note();
-        $notes->user_id = auth()->id();
+        $currentUser = JWTAuth::parseToken()->authenticate();
 
-        if ($notes->user_id == auth()->id()) 
+        if ($currentUser) 
         {
-            $user = Note::leftJoin('labels', 'labels.note_id', '=', 'notes.id')
-                            ->select('notes.id','notes.title','notes.description','notes.pin','notes.archive','notes.colour','labels.labelname')
-                            ->where('notes.pin','=','1')->where('notes.archive','=','0')
-                            ->get();
+            $user = Note::leftJoin('collabarators', 'collabarators.note_id', '=', 'notes.id')->leftJoin('labels', 'labels.note_id', '=', 'notes.id')
+            ->select('notes.id','notes.title','notes.description','notes.pin','notes.archive','notes.colour','collabarators.email as Collabarator','labels.labelname')
+            //->where('notes.pin','=','1')->where('notes.archive','=','0')/
+            ->where('notes.user_id','=',$currentUser->id)->orWhere('collabarators.email','=',$currentUser->email)->get();
                 
-            if ($user=='[]'){
-                return response()->json([
-                    'message' => 'Notes not found'
-                ], 404);
+            if ($user=='[]')
+            {
+                return response()->json(['message' => 'Notes not found'], 404);
             }
             return response()->json([
                 'notes' => $user,
                 'message' => 'Fetched Notes Successfully'
             ], 201);
         }
-        return response()->json([
-            'status' => 403, 
-            'message' => 'Invalid token'
-        ],403);
+        return response()->json([ 'message' => 'Invalid token'],403);
     }
 
     /**
@@ -281,26 +276,18 @@ class NoteController extends Controller
         if ($notes->user_id == auth()->id()) 
         {
             $usernotes = Note::select('id', 'title', 'description')
-                ->where([
-                    ['user_id', '=', $notes->user_id],['pin','=', 1]
-                ])
-                ->get();
+                ->where([['user_id', '=', $notes->user_id],['pin','=', 1]])->get();
             
-            if ($usernotes=='[]'){
-                return response()->json([
-                    'message' => 'Notes not found'
-                ], 404);
+            if ($usernotes=='[]')
+            {
+                return response()->json(['message' => 'Notes not found'], 404);
             }
-            return
-            response()->json([
-                'message' => 'Fetched Pinned Notes Successfully',
-                'notes' => $usernotes
+            return response()->json([
+                    'message' => 'Fetched Pinned Notes Successfully',
+                    'notes' => $usernotes
             ], 201);
         }
-        return response()->json([
-            'status' => 403, 
-            'message' => 'Invalid token'
-        ],403);
+        return response()->json([ 'message' => 'Invalid token'],403);
     }
 
     /**
@@ -361,26 +348,18 @@ class NoteController extends Controller
         if ($notes->user_id == auth()->id()) 
         {
             $usernotes = Note::select('id', 'title', 'description')
-                ->where([
-                    ['user_id', '=', $notes->user_id],['Archive','=', 1]
-                ])
-                ->get();
+                ->where([['user_id', '=', $notes->user_id],['Archive','=', 1]])->get();
             
-            if ($usernotes=='[]'){
-                return response()->json([
-                    'message' => 'Notes not found'
-                ], 404);
+            if ($usernotes=='[]')
+            {
+                return response()->json(['message' => 'Notes not found'], 404);
             }
-            return
-            response()->json([
+            return response()->json([
                 'message' => 'Fetched Archived Notes',
                 'notes' => $usernotes
             ], 201);
         }
-        return response()->json([
-            'status' => 403, 
-            'message' => 'Invalid token'
-        ],403);
+        return response()->json(['message' => 'Invalid token'],403);
     }
 
     /**
@@ -481,10 +460,9 @@ class NoteController extends Controller
                     ])
                     ->get();
                 
-                if ($usernotes == '[]'){
-                    return response()->json([
-                        'message' => 'Notes not found'
-                    ], 404);
+                if ($usernotes == '[]')
+                {
+                    return response()->json(['message' => 'Notes not found'], 404);
                 }
                 return response()->json([
                     'message' => 'Fetched Notes of colour '.$colour_name,
