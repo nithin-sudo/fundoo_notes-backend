@@ -28,7 +28,6 @@ class CreateLabelsTable extends Migration
                 ->on('users')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
-            $table->enum('notes', [0, 1, 2])->default(0);
             $table->timestamps();
         });
     }
