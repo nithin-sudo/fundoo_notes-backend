@@ -2,19 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Validator as FacadesValidator;
+use App\Exceptions\UserNotFountException;
+use App\Http\Requests\SendEmailRequest;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Tymon\JWTAuth\Facades\JWTAuth;
+use App\Models\PasswordReset;
 use Illuminate\Http\Request;
 use App\Models\User;
-use App\Models\PasswordReset;
-use App\Http\Requests\SendEmailRequest;
-use Illuminate\Support\Facades\Log;
-use App\Exceptions\UserNotFountException;
 use Exception;
-use Illuminate\Support\Facades\Validator as FacadesValidator;
-use Tymon\JWTAuth\Facades\JWTAuth;
 use Validator;
 
 /**
- * @since 
+ * @since 24-sep-2021
  * 
  * This is the main controller that is responsible for user registration,login,user-profile 
  * refresh and logout API's.
@@ -32,7 +34,9 @@ class UserController extends Controller
     }
 
     /**
-     * Register a User.
+     * It takes a POST request and requires fields for the user to register
+     * and validates them if it is validated,creates those fields including
+     * values in DB and returns success response.
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -51,12 +55,11 @@ class UserController extends Controller
         {
             return response()->json($validator->errors()->toJson(), 400);
         }
+
         $user = User::where('email', $request->email)->first();
-        
         if ($user)
         {
             return response()->json(['message' => 'The email has already been taken'],401);
-        
         }
 
         $user = User::create(array_merge(
@@ -67,6 +70,10 @@ class UserController extends Controller
         //log info method 
         Log::info('Registered user Email : '.'Email Id :'.$request->email );        
 
+        $value = Cache::remember('users', 0.5, function () {
+            return DB::table('users')->get();
+        });
+
         return response()->json([
             'message' => 'User successfully registered',
             'user' => $user
@@ -74,7 +81,8 @@ class UserController extends Controller
     }
 
      /**
-     * Get a JWT via given credentials.
+     * Takes the POST request and user credentials checks if it correct,
+     * if so, returns JWT access token.
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -90,38 +98,27 @@ class UserController extends Controller
             return response()->json($validator->errors(), 422);
         }
 
-        try
+        $value = Cache::remember('users', 1, function () {
+            //return DB::table('users')->get();
+            return User::all();
+        });
+        
+        $user = User::where('email', $request->email)->first();
+        if(!$user)
         {
-            $user = User::where('email', $request->email)->first();
-            
-            if(!$user)
-            {
-                //log info method 
-                //Log::channel('slack')->info('Something happened!');
-               // Log::error('User failed to login.', ['id' => $request->email]);
-               Log::channel('mydailylogs')->error("email not found");
-                throw new UserNotFountException('User Not Found');
-            }
+            Log::error('User failed to login.', ['id' => $request->email]);
+            return response()->json([
+                     'message' => 'we can not find the user with that e-mail address You need to register first'
+                  ], 401);
         }
          
-         //if(!$user)
-        //{
-            // throw new UserNotFountException ;
-            //  return response()->json([
-            //      'message' => 'we can not find the user with that e-mail address You need to register first'
-            //  ], 401);
-        //}
-         catch(UserNotFountException $e)
-         {
-             return $e->getMessage();
-         }
+        if (!$token = auth()->attempt($validator->validated()))
+        {  
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
 
-         if (!$token = auth()->attempt($validator->validated()))
-         {  
-             return response()->json(['error' => 'Unauthorized'], 401);
-         }
-
-         Log::info('Login Success : '.'Email Id :'.$request->email ); 
+        Log::info('Login Success : '.'Email Id :'.$request->email ); 
+       
         return response()->json([ 
             'message' => 'Login successfull',  
             'access_token' => $token
@@ -129,7 +126,7 @@ class UserController extends Controller
     }
 
     /**
-     * Refresh a token.
+     * refreshes and gives a new token.
      *
      * @return \Illuminate\Http\JsonResponse
      */
