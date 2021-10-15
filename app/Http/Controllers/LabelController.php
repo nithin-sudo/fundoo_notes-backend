@@ -2,17 +2,31 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Label;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use JWTAuth;
-use Auth;
+use Illuminate\Http\Request;
+use App\Models\Label;
 use Exception;
 use Validator;
+use JWTAuth;
+use Auth;
 
 
+/**
+ * @since 06-oct-2021
+ * 
+ * This controller is responsible for performing CRUD operations 
+ * on Labels.
+ */
 class LabelController extends Controller
 {
+
+    /**
+     * This function takes the User access token and note id and 
+     * creates a label for that respective note is and user.
+     * 
+     * 
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function createLabel(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -49,6 +63,13 @@ class LabelController extends Controller
         }
     }
 
+    /**
+     * This function takes the User access token and label id and 
+     * displays that respective label id.
+     * 
+     * 
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function displayLabelById(Request $request)
     {
         try
@@ -68,6 +89,13 @@ class LabelController extends Controller
         return $labels;
     }
 
+    /**
+     * This function takes the User access token and label id and 
+     * updates the label for the respective id.
+     * 
+     * 
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function updateLabelById(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -105,6 +133,13 @@ class LabelController extends Controller
         return $label;
     }
 
+
+    /**
+     * This function takes the User access token and label id and 
+     * and deleted that particular label id.
+     * 
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function deleteLabelById(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -138,6 +173,13 @@ class LabelController extends Controller
         }
     }
 
+
+    /**
+     * This function takes the User access token and returns
+     * all the labels present for particular User.
+     * 
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getAllLabels()
     {
         $labels = new Label();
