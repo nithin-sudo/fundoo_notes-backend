@@ -43,7 +43,6 @@ class ForgotPasswordController extends Controller
         
         $passwordReset = PasswordReset::updateOrCreate(
             ['email' => $user->email],
-
             [
                 'email' => $user->email,
                 'token' => JWTAuth::fromUser($user)
@@ -55,9 +54,7 @@ class ForgotPasswordController extends Controller
             $sendEmail = new SendEmailRequest();
             $sendEmail->sendEmail($user->email,$passwordReset->token);
         }
-
         return response()->json(['message' => 'we have emailed your password reset link to respective mail'],200);
-
     }
 
     /**
