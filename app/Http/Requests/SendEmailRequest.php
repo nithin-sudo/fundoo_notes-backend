@@ -34,13 +34,13 @@ class SendEmailRequest
         try
         {                                       
             $mail->isSMTP();                                          
-            $mail->Host       = 'smtp.gmail.com';                        
+            $mail->Host       = env('MAIL_HOST');                        
             $mail->SMTPAuth   = true;                                  
-            $mail->Username   = 'nithinkrishnasathram@gmail.com';                  
-            $mail->Password   = '****';                              
+            $mail->Username   = env('MAIL_USERNAME');                  
+            $mail->Password   = env('MAIL_PASSWORD');                              
             $mail->SMTPSecure = 'tls'; 
             $mail->Port       = 587;
-            $mail->setFrom('nithinkrishnasathram@gmail.com', 'nithin'); 
+            $mail->setFrom(env('MAIL_USERNAME'),env('MAIL_FROM_NAME')); 
             $mail->addAddress($email,$name);
             $mail->isHTML(true);  
             $mail->Subject =  $subject;
@@ -78,13 +78,13 @@ class SendEmailRequest
         try
         {                                       
             $mail->isSMTP();                                          
-            $mail->Host       = 'smtp.gmail.com';                        
+            $mail->Host       = env('MAIL_HOST');                        
             $mail->SMTPAuth   = true;                                  
-            $mail->Username   = 'nithinkrishnasathram@gmail.com';                  
-            $mail->Password   = '*****';                              
+            $mail->Username   = env('MAIL_USERNAME');                  
+            $mail->Password   = env('MAIL_PASSWORD');                              
             $mail->SMTPSecure = 'tls'; 
             $mail->Port       = 587;
-            $mail->setFrom('nithinkrishnasathram@gmail.com','nithin'); 
+            $mail->setFrom(env('MAIL_USERNAME'),env('MAIL_FROM_NAME')); 
             $mail->addAddress($email,$name);
             $mail->isHTML(true);  
             $mail->Subject =  $subject;
