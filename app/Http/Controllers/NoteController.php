@@ -477,4 +477,56 @@ class NoteController extends Controller
         return response()->json(['message' => 'colour Not Specified in the List' ], 400);
     }
 
+    /**
+     * This function takes the User access token and search key to search
+     * if the access token is valid it returns all the notes which has given
+     * search key for that particular user.
+     * 
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function searchAllNotes(Request $request)
+    {
+        $validator = Validator::make($request->all(),['search' => 'required|string']);
+
+        if($validator->fails())
+        {
+            return response()->json($validator->errors()->toJson(), 400);
+        }
+
+        $searchKey = $request->input('search');
+        $currentUser = JWTAuth::parseToken()->authenticate();
+
+        if ($currentUser) 
+        {
+            $usernotes = Note::leftJoin('collabarators', 'collabarators.note_id', '=', 'notes.id')->leftJoin('labels', 'labels.note_id', '=', 'notes.id')
+            ->select('notes.id','notes.title','notes.description','notes.pin','notes.archive','notes.colour','collabarators.email as Collabarator','labels.labelname')
+            ->where('notes.user_id','=',$currentUser->id)->Where('notes.title', 'like','%'.$searchKey.'%')
+            ->orWhere('notes.user_id','=',$currentUser->id)->Where('notes.description', 'like','%'.$searchKey.'%')
+            ->orWhere('notes.user_id','=',$currentUser->id)->Where('labels.labelname', 'like','%'.$searchKey.'%')
+            ->orWhere('collabarators.email','=',$currentUser->email)->Where('notes.title', 'like','%'.$searchKey.'%')
+            ->orWhere('collabarators.email','=',$currentUser->email)->Where('notes.description', 'like','%'.$searchKey.'%')
+            ->orWhere('collabarators.email','=',$currentUser->email)->Where('labels.labelname', 'like','%'.$searchKey.'%')
+            ->get();
+
+            if ($usernotes == '[]')
+            {
+                return response()->json(['message' => 'No results'], 404); 
+            }
+            return response()->json([
+                'message' => 'Fetched Notes Successfully',
+                'notes' => $usernotes
+            ], 201);   
+        }
+        return response()->json(['message' => 'Invalid authorisation token'],403);
+    }
+
+    public function getpaginateNoteData()
+    {
+        $noteData = Note::paginate(3);
+        
+        return response()->json([
+            'message' => 'Paginate Notes',
+            'notes' => $noteData
+        ], 201);
+    }
 }
