@@ -62,4 +62,6 @@ Route::group([
     Route::put('editcollabnote', [CollabaratorController::class, 'updateNoteByCollabarator']);
     Route::post('deletecollab', [CollabaratorController::class, 'deleteCollabarator']);
     Route::get('allcollab', [CollabaratorController::class, 'getAllCollabarators']);
+    Route::get('paginatenote', [NoteController::class, 'getpaginateNoteData']);
+    Route::get('searchnotes', [NoteController::class, 'searchAllNotes']);
 });   
