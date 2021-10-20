@@ -203,7 +203,7 @@ class NoteController extends Controller
         {
             $user = Note::leftJoin('collabarators', 'collabarators.note_id', '=', 'notes.id')->leftJoin('labels', 'labels.note_id', '=', 'notes.id')
             ->select('notes.id','notes.title','notes.description','notes.pin','notes.archive','notes.colour','collabarators.email as Collabarator','labels.labelname')
-            //->where('notes.pin','=','1')->where('notes.archive','=','0')/
+            ->where('notes.pin','=','0')->where('notes.archive','=','0')
             ->where('notes.user_id','=',$currentUser->id)->orWhere('collabarators.email','=',$currentUser->email)->get();
                 
             if ($user=='[]')
