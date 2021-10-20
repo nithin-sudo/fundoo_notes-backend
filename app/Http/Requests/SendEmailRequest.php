@@ -28,7 +28,6 @@ class SendEmailRequest
         $subject = 'Regarding your Password Reset';
         $data ="Your password Reset Link <br>".$token;
           
-        require '..\vendor\autoload.php';
         $mail = new PHPMailer(true);
 
         try
@@ -46,8 +45,9 @@ class SendEmailRequest
             $mail->Subject =  $subject;
             $mail->Body    = $data;
             $dt = $mail->send();
-
-            if($dt)
+            sleep(3);
+            
+           if($dt)
                 return true;
             else
                 return false;
@@ -72,7 +72,6 @@ class SendEmailRequest
         $subject = 'Note shared with you:';
         $data = $currentUserEmail.' shared a Note with you <br>'.$data;
           
-        require '..\vendor\autoload.php';
         $mail = new PHPMailer(true);
 
         try
