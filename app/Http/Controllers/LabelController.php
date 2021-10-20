@@ -19,6 +19,45 @@ use Auth;
  */
 class LabelController extends Controller
 {
+    /**
+     * This function takes the User access token and labelname
+     * creates a label for that respective user.
+     * 
+     * 
+     * @return \Illuminate\Http\JsonResponse
+     */
+
+    public function createLabel(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'labelname' => 'required|string|between:2,15',
+        ]);
+
+        if($validator->fails())
+        {
+            return response()->json($validator->errors()->toJson(), 400);
+        }
+
+        $currentUser = JWTAuth::parseToken()->authenticate();
+        if ($currentUser)
+        {
+            $labelName = Label::where('labelname', $request->labelname)->first();
+            if ($labelName)
+            {
+                Log::alert('Label Created : ',['email'=>$request->email]);
+                return response()->json(['message' => 'Label Name already exists'],401);
+            }
+        
+            $label = new Label;
+            $label->labelname = $request->get('labelname');
+            if($currentUser->labels()->save($label))
+            {
+                return response()->json(['message' => 'Label added Sucessfully'], 201);
+            }
+            return response()->json(['message' => 'Could not add label'], 405);
+        }
+        return response()->json(['message' => 'Invalid authorization token'], 404);
+    }
 
     /**
      * This function takes the User access token and note id and 
@@ -27,11 +66,11 @@ class LabelController extends Controller
      * 
      * @return \Illuminate\Http\JsonResponse
      */
-    public function createLabel(Request $request)
+    public function addLabelByNoteId(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'note_id' => 'required',
-            'labelname' => 'required|string|between:2,20',
+            'id' => 'required',
+            'note_id' => 'required'
         ]);
 
         if($validator->fails())
@@ -39,28 +78,37 @@ class LabelController extends Controller
             return response()->json($validator->errors()->toJson(), 400);
         }
 
-        try
+        $currentUser = JWTAuth::parseToken()->authenticate();
+        
+        if($currentUser)
         {
-            $currentUser = JWTAuth::parseToken()->authenticate();
-            $label = new Label;
-            $label->note_id = $request->get('note_id');
-            $label->labelname = $request->get('labelname');
+            $id = $request->input('id');
+            $note_id = $request->input('note_id');
+            
+            $label = $currentUser->labels()->find($id);
+    
+            if(!$label)
+            {
+                return response()->json([ 'message' => 'Label not Found'], 404);
+            }
 
+            $note = $currentUser->notes()->find($note_id);
+    
+            if(!$note)
+            {
+                return response()->json([ 'message' => 'Notes not Found'], 404);
+            }
+
+            $label->note_id = $request->get('note_id');
+            
             if($currentUser->labels()->save($label))
             {
-                Log::info('Label created',['user_id'=>$currentUser,'note_id'=>$request->note_id]);
-                return response()->json([
-                    'message' => 'Label created Sucessfully'
-                ], 201);
-            } 
+                return response()->json([ 'message' => 'Label Added to Note Sucessfully' ], 201);
+            }
+            return response()->json([ 'message' => 'Label Did Not added to Note' ], 403);
+
         }
-        catch (Exception $e) 
-		{
-            Log::error('Invalid User');
-            return response()->json([ 
-                'message' => 'Invalid authorization token'
-            ], 404);
-        }
+        return response()->json([ 'message' => 'Invalid authorization token'], 404);
     }
 
     /**
