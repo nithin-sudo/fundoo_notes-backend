@@ -38,7 +38,7 @@ Route::group([
 
     Route::post('createnote', [NoteController::class, 'createNote']);
     Route::get('displaynote', [NoteController::class, 'displayNoteById']);
-    Route::post('deletenote', [NoteController::class, 'deleteNoteById']);
+    Route::delete('deletenote', [NoteController::class, 'deleteNoteById']);
     Route::put('updatenote', [NoteController::class, 'updateNoteById']);
     Route::get('getallnotes', [NoteController::class, 'getAllNotes']);
 
@@ -53,14 +53,15 @@ Route::group([
     Route::get('getcolourednotes', [NoteController::class, 'getColouredNotes']);
 
     Route::post('createlable', [LabelController::class, 'createLabel']);
+    Route::post('addlabelbynoteid', [LabelController::class, 'addLabelByNoteId']);
     Route::get('displaylable', [LabelController::class, 'displayLabelById']);
     Route::put('updatelable', [LabelController::class, 'updateLabelById']);
-    Route::post('deletelable', [LabelController::class, 'deleteLabelById']);
+    Route::delete('deletelable', [LabelController::class, 'deleteLabelById']);
     Route::get('displayall', [LabelController::class, 'getAllLabels']);
 
     Route::post('addcollab', [CollabaratorController::class, 'addCollabatorByNoteId']);
     Route::put('editcollabnote', [CollabaratorController::class, 'updateNoteByCollabarator']);
-    Route::post('deletecollab', [CollabaratorController::class, 'deleteCollabarator']);
+    Route::delete('deletecollab', [CollabaratorController::class, 'deleteCollabarator']);
     Route::get('allcollab', [CollabaratorController::class, 'getAllCollabarators']);
     Route::get('paginatenote', [NoteController::class, 'getpaginateNoteData']);
     Route::get('searchnotes', [NoteController::class, 'searchAllNotes']);
