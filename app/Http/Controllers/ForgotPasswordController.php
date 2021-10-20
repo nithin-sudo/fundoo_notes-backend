@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\PasswordReset;
 use App\Http\Requests\SendEmailRequest;
+use Illuminate\Support\Facades\Log;
 use Exception;
 use Illuminate\Support\Facades\Validator as FacadesValidator;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -38,6 +39,7 @@ class ForgotPasswordController extends Controller
 
         if (!$user)
         {
+            Log::error('Email not found.', ['id' => $request->email]);
             return response()->json([ 'message' => 'we can not find a user with that email address'],404);
         }
         
@@ -54,7 +56,9 @@ class ForgotPasswordController extends Controller
             $sendEmail = new SendEmailRequest();
             $sendEmail->sendEmail($user->email,$passwordReset->token);
         }
-        return response()->json(['message' => 'we have emailed your password reset link to respective mail'],200);
+
+        Log::info('Forgot PassWord Link : '.'Email Id :'.$request->email );
+        return response()->json(['message' => 'we have mailed your password reset link to respective E-mail'],200);
     }
 
     /**
@@ -74,7 +78,6 @@ class ForgotPasswordController extends Controller
 
         if ($validate->fails())
         {
-
             return response()->json([
                  'message' => "Password doesn't match"
                 ],400);
@@ -92,6 +95,7 @@ class ForgotPasswordController extends Controller
 
         if (!$user)
         {
+            Log::error('Email not found.', ['id' => $request->email]);
             return response()->json([
                 'message' => "we can't find the user with that e-mail address"
             ], 400);
@@ -101,6 +105,7 @@ class ForgotPasswordController extends Controller
             $user->password = bcrypt($request->new_password);
             $user->save();
             $passwordReset->delete();
+            Log::info('Reset Successful : '.'Email Id :'.$request->email );
             return response()->json([
                 'status' => 201, 
                 'message' => 'Password reset successfull!'

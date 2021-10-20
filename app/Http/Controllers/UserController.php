@@ -140,24 +140,16 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-     public function logout() 
-     {
-        try
+    public function logout() 
+    {
+        $user = auth()->logout();
+        if($user)
         {
-            auth()->logout();
-        } 
-        catch (Exception $e) 
-        {
-            return response()->json([
-                'message' => 'Invalid authorization token'
-            ], 404);
+            return response()->json(['message' => 'User successfully signed out'],201);
         }
-    
-        return response()->json([
-            'message' => 'User successfully signed out'
-        ],201);
+        return response()->json(['message' => 'Invalid authorization token'],404);
         
-     }
+    }
 
     /**
      * Get the token array structure.
