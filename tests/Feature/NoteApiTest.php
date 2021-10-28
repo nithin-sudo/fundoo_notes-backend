@@ -13,11 +13,11 @@ class NoteApiTest extends TestCase
     {
         $response = $this->withHeaders([
             'Content-Type' => 'Application/json',
-            'Authorization' => 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9sb2NhbGhvc3Q6ODAwMFwvYXBpXC9hdXRoXC9sb2dpbiIsImlhdCI6MTYzMzQxMTQxMCwiZXhwIjoxNjMzNDE1MDEwLCJuYmYiOjE2MzM0MTE0MTAsImp0aSI6Imd5WThtclFFWG50N2JDUTgiLCJzdWIiOjEsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.b4CReGFIWLimgv0auC4sRTEHn8S6cZ8t9L6H_rNqwz4'
+            'Authorization' => 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9sb2NhbGhvc3Q6ODAwMFwvYXBpXC9hdXRoXC9sb2dpbiIsImlhdCI6MTYzNDYzNjIyMCwiZXhwIjoxNjM0NjM5ODIwLCJuYmYiOjE2MzQ2MzYyMjAsImp0aSI6IlNjeWFhekF0b1prVldZMXUiLCJzdWIiOjcsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.FAd0DyV1sM3shANnfXsqaA2qHPX0JWqd5LKoYH_Vj5k'
         ])->json('POST', '/api/auth/createnote', 
         [
-            "title" => "title test one",
-            "description" => "description test one",
+            "title" => "title test two",
+            "description" => "description test two",
         ]);
 
         $response->assertStatus(201)->assertJson(['message' => 'notes created successfully']);
@@ -44,12 +44,12 @@ class NoteApiTest extends TestCase
     {
         $response = $this->withHeaders([
             'Content-Type' => 'Application/json',
-            'Authorization' => 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9sb2NhbGhvc3Q6ODAwMFwvYXBpXC9hdXRoXC9sb2dpbiIsImlhdCI6MTYzMzQwNTIwMywiZXhwIjoxNjMzNDA4ODAzLCJuYmYiOjE2MzM0MDUyMDMsImp0aSI6IndJVkhITk5GTW5vVmhJT2giLCJzdWIiOjEsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.7jYn6UvYo0X5xkTEMN3vKf-Jeg21UDan2DfntCAU-Qg'
+            'Authorization' => 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9sb2NhbGhvc3Q6ODAwMFwvYXBpXC9hdXRoXC9sb2dpbiIsImlhdCI6MTYzNDYzNjIyMCwiZXhwIjoxNjM0NjM5ODIwLCJuYmYiOjE2MzQ2MzYyMjAsImp0aSI6IlNjeWFhekF0b1prVldZMXUiLCJzdWIiOjcsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.FAd0DyV1sM3shANnfXsqaA2qHPX0JWqd5LKoYH_Vj5k'
         ])->json('PUT', '/api/auth/updatenote', 
         [
-            "id" => "16",
+            "id" => "12",
             "title" => "title update",
-            "description" => "descriptionupdate",
+            "description" => "description update",
         ]);
         $response->assertStatus(201)->assertJson(['message' => 'Note updated Sucessfully']);
     }
@@ -59,7 +59,7 @@ class NoteApiTest extends TestCase
      {
          $response = $this->withHeaders([
              'Content-Type' => 'Application/json',
-             'Authorization' => 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9sb2NhbGhvc3Q6ODAwMFwvYXBpXC9hdXRoXC9sb2dpbiIsImlhdCI6MTYzMzQwNTIwMywiZXhwIjoxNjMzNDA4ODAzLCJuYmYiOjE2MzM0MDUyMDMsImp0aSI6IndJVkhITk5GTW5vVmhJT2giLCJzdWIiOjEsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.7jYn6UvYo0X5xkTEMN3vKf-Jeg21UDan2DfntCAU-Qg'
+             'Authorization' => 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9sb2NhbGhvc3Q6ODAwMFwvYXBpXC9hdXRoXC9sb2dpbiIsImlhdCI6MTYzNDYzNjIyMCwiZXhwIjoxNjM0NjM5ODIwLCJuYmYiOjE2MzQ2MzYyMjAsImp0aSI6IlNjeWFhekF0b1prVldZMXUiLCJzdWIiOjcsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.FAd0DyV1sM3shANnfXsqaA2qHPX0JWqd5LKoYH_Vj5k'
          ])->json('PUT', '/api/auth/updatenote', 
          [
              "id" => "20",
@@ -74,10 +74,10 @@ class NoteApiTest extends TestCase
      {
          $response = $this->withHeaders([
              'Content-Type' => 'Application/json',
-             'Authorization' => 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9sb2NhbGhvc3Q6ODAwMFwvYXBpXC9hdXRoXC9sb2dpbiIsImlhdCI6MTYzMzQwNTIwMywiZXhwIjoxNjMzNDA4ODAzLCJuYmYiOjE2MzM0MDUyMDMsImp0aSI6IndJVkhITk5GTW5vVmhJT2giLCJzdWIiOjEsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.7jYn6UvYo0X5xkTEMN3vKf-Jeg21UDan2DfntCAU-Qg'
+             'Authorization' => 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9sb2NhbGhvc3Q6ODAwMFwvYXBpXC9hdXRoXC9sb2dpbiIsImlhdCI6MTYzNDYzNjIyMCwiZXhwIjoxNjM0NjM5ODIwLCJuYmYiOjE2MzQ2MzYyMjAsImp0aSI6IlNjeWFhekF0b1prVldZMXUiLCJzdWIiOjcsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.FAd0DyV1sM3shANnfXsqaA2qHPX0JWqd5LKoYH_Vj5k'
          ])->json('POST', '/api/auth/deletenote', 
          [
-             "id" => "1",
+             "id" => "12",
          ]);
          $response->assertStatus(201)->assertJson(['message' => 'Note deleted Sucessfully']);
      }
@@ -87,7 +87,7 @@ class NoteApiTest extends TestCase
      {
          $response = $this->withHeaders([
              'Content-Type' => 'Application/json',
-             'Authorization' => 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9sb2NhbGhvc3Q6ODAwMFwvYXBpXC9hdXRoXC9sb2dpbiIsImlhdCI6MTYzMzM2OTU5NCwiZXhwIjoxNjMzMzczMTk0LCJuYmYiOjE2MzMzNjk1OTQsImp0aSI6InQ0MHo5djlXNFNGOUZRblEiLCJzdWIiOjEsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.t09kohx5hV15u8aAH-WXAsdnzmh9HsAqCOLci9QKyQ0'
+             'Authorization' => 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9sb2NhbGhvc3Q6ODAwMFwvYXBpXC9hdXRoXC9sb2dpbiIsImlhdCI6MTYzNDYzNjIyMCwiZXhwIjoxNjM0NjM5ODIwLCJuYmYiOjE2MzQ2MzYyMjAsImp0aSI6IlNjeWFhekF0b1prVldZMXUiLCJzdWIiOjcsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.FAd0DyV1sM3shANnfXsqaA2qHPX0JWqd5LKoYH_Vj5k'
          ])->json('POST', '/api/auth/deletenote', 
          [
              "id" => "20",
@@ -101,7 +101,7 @@ class NoteApiTest extends TestCase
      {
          $response = $this->withHeaders([
              'Content-Type' => 'Application/json',
-             'Authorization' => 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9sb2NhbGhvc3Q6ODAwMFwvYXBpXC9hdXRoXC9sb2dpbiIsImlhdCI6MTYzMzQxMTQxMCwiZXhwIjoxNjMzNDE1MDEwLCJuYmYiOjE2MzM0MTE0MTAsImp0aSI6Imd5WThtclFFWG50N2JDUTgiLCJzdWIiOjEsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.b4CReGFIWLimgv0auC4sRTEHn8S6cZ8t9L6H_rNqwz4'
+             'Authorization' => 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9sb2NhbGhvc3Q6ODAwMFwvYXBpXC9hdXRoXC9sb2dpbiIsImlhdCI6MTYzNDYzNjIyMCwiZXhwIjoxNjM0NjM5ODIwLCJuYmYiOjE2MzQ2MzYyMjAsImp0aSI6IlNjeWFhekF0b1prVldZMXUiLCJzdWIiOjcsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.FAd0DyV1sM3shANnfXsqaA2qHPX0JWqd5LKoYH_Vj5k'
          ])->json('GET', '/api/auth/getallnotes');
 
          $response->assertStatus(201)->assertJson(['message' => 'Fetched Notes Successfully']);
@@ -116,7 +116,7 @@ class NoteApiTest extends TestCase
              'Authorization' => 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9sb2NhbGhvc3Q6ODAwMFwvYXBpXC9hdXRoXC9sb2dpbiIsImlhdCI6MTYzMzQxMTQxMCwiZXhwIjoxNjMzNDE1MDEwLCJuYmYiOjE2MzM0MTE0MTAsImp0aSI6Imd5WThtclFFWG50N2JDUTgiLCJzdWIiOjEsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.b4CReGFIWLimgv0auC4sRTEHn8S6cZ8t9L6H_rNqwz'
          ])->json('GET', '/api/auth/getallnotes');
 
-         $response->assertStatus(404)->assertJson(['message' => 'Notes not found']);
+         $response->assertStatus(403)->assertJson(['message' => 'Invalid token']);
      }
 
 }
