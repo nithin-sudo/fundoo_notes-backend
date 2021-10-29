@@ -69,11 +69,6 @@ class UserController extends Controller
             'password' => bcrypt($request->password),
             ]);
 
-        // $user = User::create(array_merge(
-        //             $validator->validated(),
-        //             ['password' => bcrypt($request->password)]
-        //         ));
-
         //log info method 
         Log::info('Registered user Email : '.'Email Id :'.$request->email );        
 
