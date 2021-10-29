@@ -14,9 +14,9 @@ class UserApiTest extends TestCase
         $response = $this->withHeaders([
             'Content-Type' => 'Application/json',
         ])->json('POST', '/api/auth/register', [
-            "firstname" => "Nithin",
+            "firstname" => "Niraj",
             "lastname" => "Krishna",
-            "email" => "nithin0krishna@gmail.com",
+            "email" => "nda3778@gmail.com",
             "password" => "nithin@123",
             "confirm_password" => "nithin@123"
         ]);
@@ -48,7 +48,7 @@ class UserApiTest extends TestCase
             'Content-Type' => 'Application/json',
         ])->json('POST', '/api/auth/login', 
         [
-            "email" => "nithin0krishna@gmail.com",
+            "email" => "nda3778@gmail.com",
             "password" => "nithin@123",
         ]);
 
@@ -62,13 +62,14 @@ class UserApiTest extends TestCase
             'Content-Type' => 'Application/json',
         ])->json('POST', '/api/auth/login', 
         [
-            "email" => "simba@gmail.com",
+            "email" => "abc@gmail.com",
             "password" => "simba@123",
         ]);
 
         $response->assertStatus(401)->assertJson(['message' => 'we can not find the user with that e-mail address You need to register first']);
     }
 
+    /*
     //logout success status
     public function test_IfGiven_AccessToken_ShouldValidate_AndReturnSuccessStatus()
     {
@@ -97,7 +98,7 @@ class UserApiTest extends TestCase
         $response = $this->withHeaders([
             'Content-Type' => 'Application/json',
         ])->json('POST', '/api/auth/forgotpassword', [
-            "email" => "nithin0krishna@gmail.com"
+            "email" => "nda3778@gmail.com"
         ]);
         
         $response->assertStatus(200)->assertJson(['message'=> 'we have mailed your password reset link to respective E-mail']);
@@ -124,7 +125,7 @@ class UserApiTest extends TestCase
         [
             "new_password" => "nithin123",
             "confirm_password" => "nithin123",
-            "token" => "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9sb2NhbGhvc3RcL2FwaVwvYXV0aFwvZm9yZ290cGFzc3dvcmQiLCJpYXQiOjE2MzQ2MzU4MTMsImV4cCI6MTYzNDYzOTQxMywibmJmIjoxNjM0NjM1ODEzLCJqdGkiOiIxNWpuNVdhUXVnSmlvVk5zIiwic3ViIjo3LCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.1URGEBFXOLDEzwT6SN8AaJiRQEof3A1OkQVOI_Zq93s"
+            "token" => "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9sb2NhbGhvc3Q6ODAwMFwvYXBpXC9hdXRoXC9sb2dpbiIsImlhdCI6MTYzNTQ4MjI5MCwiZXhwIjoxNjM1NDg1ODkwLCJuYmYiOjE2MzU0ODIyOTAsImp0aSI6IkNYZVV5aHhBVE9SQTRZYnYiLCJzdWIiOjEwLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.JOp6-SfId_v9h0M5a-2jPguP7HX_UnzgAkYOSE_h3VU"
         ]);
         $response->assertStatus(201)->assertJson(['message' => 'Password reset successfull!']);
     }   
@@ -141,6 +142,6 @@ class UserApiTest extends TestCase
             "token" => " "
         ]);
         $response->assertStatus(401)->assertJson(['message' => 'This token is invalid']);
-    }   
+    }   */
 
 }
