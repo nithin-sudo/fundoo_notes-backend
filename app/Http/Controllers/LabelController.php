@@ -50,6 +50,7 @@ class LabelController extends Controller
         
             $label = new Label;
             $label->labelname = $request->get('labelname');
+            
             if($currentUser->labels()->save($label))
             {
                 return response()->json(['message' => 'Label added Sucessfully'], 201);
