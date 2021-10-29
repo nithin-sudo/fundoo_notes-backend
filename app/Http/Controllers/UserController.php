@@ -62,10 +62,17 @@ class UserController extends Controller
             return response()->json(['message' => 'The email has already been taken'],401);
         }
 
-        $user = User::create(array_merge(
-                    $validator->validated(),
-                    ['password' => bcrypt($request->password)]
-                ));
+        $user = User::create([
+            'firstname' => $request->firstname,
+            'lastname' => $request->lastname,
+            'email' => $request->email,
+            'password' => bcrypt($request->password),
+            ]);
+
+        // $user = User::create(array_merge(
+        //             $validator->validated(),
+        //             ['password' => bcrypt($request->password)]
+        //         ));
 
         //log info method 
         Log::info('Registered user Email : '.'Email Id :'.$request->email );        
