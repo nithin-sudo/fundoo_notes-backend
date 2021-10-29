@@ -39,7 +39,7 @@ class ForgotPasswordController extends Controller
 
         if (!$user)
         {
-            Log::error('Email not found.', ['id' => $request->email]);
+            //Log::error('Email not found.', ['id' => $request->email]);
             return response()->json([ 'message' => 'we can not find a user with that email address'],404);
         }
         
@@ -106,6 +106,7 @@ class ForgotPasswordController extends Controller
             $user->save();
             $passwordReset->delete();
             Log::info('Reset Successful : '.'Email Id :'.$request->email );
+            
             return response()->json([
                 'status' => 201, 
                 'message' => 'Password reset successfull!'
