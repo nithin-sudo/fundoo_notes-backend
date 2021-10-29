@@ -8,21 +8,21 @@ use Tests\TestCase;
 
 class LabelApiTest extends TestCase
 {
-    /*
+    
     //create label success
     public function test_IfGiven_Note_idAnd_LabelName_ShouldValidate_AndReturnSuccessStatus()
     {
         $response = $this->withHeaders([
             'Content-Type' => 'Application/json',
-            'Authorization' => 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9sb2NhbGhvc3Q6ODAwMFwvYXBpXC9hdXRoXC9sb2dpbiIsImlhdCI6MTYzNTQ4MzM4NiwiZXhwIjoxNjM1NDg2OTg2LCJuYmYiOjE2MzU0ODMzODYsImp0aSI6IlJ6VUpsWWdtQ2VUdmFYUUUiLCJzdWIiOjEwLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.CjJ80kSAVmbT8rPHBfkxmgH94PmfEdMnSU63KsnrEb4'
+            'Authorization' => 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9sb2NhbGhvc3Q6ODAwMFwvYXBpXC9hdXRoXC9sb2dpbiIsImlhdCI6MTYzNTQ4NDg1NiwiZXhwIjoxNjM1NDg4NDU2LCJuYmYiOjE2MzU0ODQ4NTYsImp0aSI6Im1Pd1RJQm5qMTJNMThoVWkiLCJzdWIiOjExLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.BMLtVup8uunG7hVGdDOsQRhZ9GE78Ej_qlrI5keTzQo'
         ])->json('POST', '/api/auth/createlable', 
         [
-            "labelname" => "test",
+            "labelname" => "new test new",
         ]);
 
         $response->assertStatus(201)->assertJson(['message' => 'Label added Sucessfully']);
     }
-
+/*
     //create label Error
     public function test_IfGiven_Note_idAnd_LabelNameAndWrongToken_ShouldValidate_AndReturnErrorsStatus()
     {
