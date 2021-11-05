@@ -32,7 +32,7 @@ Route::group([
     Route::post('register', [UserController::class, 'register']);
     Route::post('login', [UserController::class, 'login']);
     Route::post('logout', [UserController::class, 'logout']);
-    Route::post('refresh', [UserController::class, 'refresh']);
+    Route::get('refresh', [UserController::class, 'refresh']);
     Route::post('forgotpassword', [ForgotPasswordController::class, 'forgotPassword']);
     Route::post('resetpassword', [ForgotPasswordController::class, 'resetPassword']);
 
