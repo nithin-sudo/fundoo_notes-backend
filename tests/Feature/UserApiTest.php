@@ -69,7 +69,7 @@ class UserApiTest extends TestCase
         $response->assertStatus(401)->assertJson(['message' => 'we can not find the user with that e-mail address You need to register first']);
     }
 
-    /*
+    
     //logout success status
     public function test_IfGiven_AccessToken_ShouldValidate_AndReturnSuccessStatus()
     {
@@ -142,6 +142,6 @@ class UserApiTest extends TestCase
             "token" => " "
         ]);
         $response->assertStatus(401)->assertJson(['message' => 'This token is invalid']);
-    }   */
+    }   
 
 }

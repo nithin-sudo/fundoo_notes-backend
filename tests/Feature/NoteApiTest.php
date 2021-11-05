@@ -82,7 +82,7 @@ class NoteApiTest extends TestCase
          $response->assertStatus(201)->assertJson(['message' => 'Note deleted Sucessfully']);
      }
 
-     /*
+     
      //delete error status
      public function test_IfGiven_WrongId_ShouldValidate_AndReturnNotes_NotFoundStatus()
      {
@@ -94,7 +94,7 @@ class NoteApiTest extends TestCase
              "id" => "20",
          ]);
          $response->assertStatus(404)->assertJson(['message' => 'Notes not Found']);
-     }*/
+     }
 
 
      //get all notes success
@@ -108,7 +108,7 @@ class NoteApiTest extends TestCase
          $response->assertStatus(201)->assertJson(['message' => 'Fetched Notes Successfully']);
      }
 
-    /*
+    
      //get all notes Error
      public function test_IfGiven_WrongAuthorisedToken_AndReturnInvalid_ErrorStatus()
      {
@@ -118,6 +118,6 @@ class NoteApiTest extends TestCase
          ])->json('GET', '/api/auth/getallnotes');
 
          $response->assertStatus(403)->assertJson(['message' => 'Invalid token']);
-     }*/
+     }
 
 }

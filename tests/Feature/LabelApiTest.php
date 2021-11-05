@@ -22,7 +22,7 @@ class LabelApiTest extends TestCase
 
         $response->assertStatus(201)->assertJson(['message' => 'Label added Sucessfully']);
     }
-/*
+
     //create label Error
     public function test_IfGiven_Note_idAnd_LabelNameAndWrongToken_ShouldValidate_AndReturnErrorsStatus()
     {
@@ -116,5 +116,5 @@ class LabelApiTest extends TestCase
          ])->json('GET', '/api/auth/displayall');
 
          $response->assertStatus(404)->assertJson(['message' => 'Labels not found']);
-     }*/
+     }
 }
